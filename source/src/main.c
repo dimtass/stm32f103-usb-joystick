@@ -30,6 +30,7 @@
 
 
 void usb_rx_parser(uint8_t * recv_buffer, uint16_t recv_len);
+void joys_callback(char * str_result, uint8_t str_len);
 
 /* Declare glb struct and initialize buffers */
 struct tp_glb glb;
@@ -41,6 +42,8 @@ DECLARE_COMM_BUFFER(usb_comm_buffer, 128, 128);
 DECLARE_USB_UART_DEV(usb_comm, ENDP1, ENDP1_TXADDR, ENDP3, ENDP3_RXADDR, VIRTUAL_COM_PORT_DATA_SIZE, 10, usb_rx_parser, NULL);
 
 DECLARE_DEV_LED(led_status, PORT_STATUS_LED, PIN_STATUS_LED);
+
+DECLARE_JOYS(joys, joys_callback);
 
 void main_loop(void)
 {
@@ -54,11 +57,11 @@ void main_loop(void)
 		}
 		dev_uart_update(&dbg_uart);
 		USB_update_timers(&usb_comm);
-	}
 
-	if ((glb.tmr_joys_update++) >= JOYS_UPDATE_TMR_MS) {
-		glb.tmr_joys_update = 0;
-		joys_update(glb.adc_axis_x, glb.adc_axis_y);
+		if ((glb.tmr_joys_update++) >= JOYS_UPDATE_TMR_MS) {
+			glb.tmr_joys_update = 0;
+			joys_update(glb.adc_axis_x, glb.adc_axis_y);
+		}
 	}
 
 	/* USB reception is done by polling,
@@ -94,6 +97,7 @@ int main(void)
 	set_trace_level(
 			0
 			| TRACE_LEVEL_DEFAULT
+			| TRACE_LEVEL_JOYS
 			,1);
 	dev_uart_add(&dbg_uart);
 	USB_Configuration();
@@ -105,7 +109,7 @@ int main(void)
 	/* ADC Configuration */
 	ADC_Configuration();
 	// /* Initialize joystick */
-	joys_reset();
+	joys_init(&joys);
 
 	TRACE(("Application started...\n"));
 	dev_led_set_pattern(&led_status, LED_PATTERN_IDLE);
@@ -115,9 +119,15 @@ int main(void)
 	}
 }
 
+/* send available data to USB */
+void joys_callback(char * str_result, uint8_t str_len)
+{
+	char usb_str[str_len + 5];
+	sprintf(usb_str, "%s%s", "DATA=", str_result);
+	USB_dev_send(&usb_comm, usb_str, str_len+5);
+}
+
 void usb_rx_parser(uint8_t * recv_buffer, uint16_t recv_len)
 {
 	TRACE(("USB0_recv: %d\n", recv_len));
 }
-
-

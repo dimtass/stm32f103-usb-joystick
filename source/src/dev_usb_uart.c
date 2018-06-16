@@ -76,19 +76,21 @@ uint32_t USB_dev_send(struct dev_usb_uart *dev, const uint8_t *ptrBuffer, uint16
 	uint16_t remain_buffer_size = dev->buffer->tx_buffer_size - remain_len;
 	volatile uint16_t *p_in = &dev->buffer->tx_ptr_in;
 
-	/* Check for buffer overflow */
-	if (remain_buffer_size < bufflen) {
-		TRACE(("\nOVF\n"));
-		return 0;
-	}
+	if (bDeviceState == CONFIGURED) {
+		/* Check for buffer overflow */
+		if (remain_buffer_size < bufflen) {
+			TRACE(("\nOVF\n"));
+			return 0;
+		}
 
-	int i = 0;
-	/* copy buffer */
-	for (i=0; i<bufflen; i++) {
-		dev->buffer->tx_buffer[*p_in] = ptrBuffer[i];
-		*p_in = (*p_in + 1)%(dev->buffer->tx_buffer_size - 1);
+		int i = 0;
+		/* copy buffer */
+		for (i=0; i<bufflen; i++) {
+			dev->buffer->tx_buffer[*p_in] = ptrBuffer[i];
+			*p_in = (*p_in + 1)%(dev->buffer->tx_buffer_size - 1);
+		}
+		if (!USB_REMAIN_TX_LENGTH(dev)) USB_Tx_IRQ(dev);
 	}
-	USB_Tx_IRQ(dev);
 
 	return 1;
 }

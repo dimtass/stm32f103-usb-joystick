@@ -20,6 +20,7 @@
  */
 typedef enum {
 	TRACE_LEVEL_DEFAULT = 	(1 << 0),
+	TRACE_LEVEL_JOYS = 	(1 << 1),
 } en_trace_level;
 
 #define DEBUG_TRACE

@@ -11,8 +11,10 @@
 #include <stdint.h>
 #include "stm32f10x.h"
 #include "platform_config.h"
+#include "usb_lib.h"
 #include "usb_regs.h"
 #include "usb_mem.h"
+#include "usb_pwr.h"
 #include "comm_buffer.h"
 
 //#pragma pack(1)
