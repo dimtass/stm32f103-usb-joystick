@@ -149,9 +149,9 @@ const uint8_t Virtual_Com_Port_StringVendor[VIRTUAL_COM_PORT_SIZ_STRING_VENDOR] 
     VIRTUAL_COM_PORT_SIZ_STRING_VENDOR,     /* Size of Vendor string */
     USB_STRING_DESCRIPTOR_TYPE,             /* bDescriptorType*/
     /* Manufacturer: "STMicroelectronics" */
-    'S', 0, 'T', 0, 'M', 0, 'i', 0, 'c', 0, 'r', 0, 'o', 0, 'e', 0,
-    'l', 0, 'e', 0, 'c', 0, 't', 0, 'r', 0, 'o', 0, 'n', 0, 'i', 0,
-    'c', 0, 's', 0
+    'S', 0, 't', 0, 'u', 0, 'p', 0, 'i', 0, 'd', 0, '-', 0, 'p', 0,
+    'r', 0, 'o', 0, 'j', 0, 'e', 0, 'c', 0, 't', 0, 's', 0, '.', 0,
+    'c', 0, 'o', 0, 'm', 0
   };
 
 const uint8_t Virtual_Com_Port_StringProduct[VIRTUAL_COM_PORT_SIZ_STRING_PRODUCT] =
@@ -159,9 +159,10 @@ const uint8_t Virtual_Com_Port_StringProduct[VIRTUAL_COM_PORT_SIZ_STRING_PRODUCT
     VIRTUAL_COM_PORT_SIZ_STRING_PRODUCT,          /* bLength */
     USB_STRING_DESCRIPTOR_TYPE,        /* bDescriptorType */
     /* Product name: "STM32 Virtual COM Port" */
-    'S', 0, 'T', 0, 'M', 0, '3', 0, '2', 0, ' ', 0, 'V', 0, 'i', 0,
-    'r', 0, 't', 0, 'u', 0, 'a', 0, 'l', 0, ' ', 0, 'C', 0, 'O', 0,
-    'M', 0, ' ', 0, 'P', 0, 'o', 0, 'r', 0, 't', 0, ' ', 0, ' ', 0
+    'U', 0, 'S', 0, 'B', 0, ' ', 0, 'J', 0, 'o', 0, 'y', 0, 's', 0,
+    't', 0, 'i', 0, 'c', 0, 'k', 0, ' ', 0, 'f', 0, 'o', 0, 'r', 0,
+    ' ', 0, 'g', 0, 'e', 0, 's', 0, 't', 0, 'u', 0, 'r', 0, 'e', 0,
+    's', 0
   };
 
 uint8_t Virtual_Com_Port_StringSerial[VIRTUAL_COM_PORT_SIZ_STRING_SERIAL] =
