@@ -1,75 +1,63 @@
-STM32F103 USB peripheral expander
+STM32F103 USB joystick with gestures
 ----
 
-This project is a USB peripheral expander for the stm32f103.
-It's made for stm32f103c8t6 but with some modification depending
-on the flash density and clocks can be used for any stm32f10x.
+This project implements a USB joystick with gestures recognition.
+That means that you can use the joystick to recognise gestures and
+then send them via USB to your workstation (you can also use UART
+if you prefer). The gestures can be composed with up to `JOYS_SAMPLES_MAX`
+samples and each sample can be one of the following:
 
-The aim is to export the stm32 peripherals to a host under a
-simple USB api, so the host can access the stm32's peripherals and
-use them. It is fully configurable and it's possible to add/remove
-peripherals on the fly.
+* `U`   : up
+* `D`   : down
+* `L`   : left
+* `R`   : right
+* `UR`  : up - right
+* `DR`  : down - right
+* `DL`  : down - left
+* `UL`  : up - left
+* `B`   : button press
 
-> This is a project in progress.
+Each gesture is transmitted via USB with following prefix:
+```
+DATA=
+```
 
-The aim is to be able to control these peripherals using a gui
-app on your desktop (Linux/Windows/Macos).
+and a `\n` (newline) at the end of the string.
 
-## Supported peripherals
-Currently the supported peripherals are the following:
+For example, this is a full circle on the joystick
+```
+DATA=U,UR,R,DR,D,DL,L,UL,U
+```
 
-* GPIOs (I/O)
-    * PA8
-    * PA9
-    * PB2
-    * PB8
-    * PB9
-    * PB10
-    * PB11
-    * PB12
-    * PB13
-    * PB14
-    * PB15
-    * PC13
-    * PC14
-    * PC15
+You can see a sample video in [here](https://www.youtube.com/watch?v=TYFL-sVukkc)
 
-* ADC1 channels:
-    * ADC1_IN0 - PA0
-    * ADC1_IN1 - PA1
-    * ADC1_IN4 - PA4
-    * ADC1_IN5 - PA4
-    * ADC1_IN6 - PA5
-    * ADC1_IN7 - PA6
-    * ADC1_IN8 - PB1
-    * ADC1_IN9 - PB2
+### How to compile and flash
+You need cmake to build this project either on Windows or Linux.
+To setup the cmake properly
+follow the instructions from [here](https://bitbucket.org/dimtass/cmake_toolchains/src/master/README.md).
+Then edit the `cmake/TOOLCHAIN_arm_none_eabi_cortex_m3.cmake` file
+and point `TOOLCHAIN_DIR` to the correct GCC path.
 
-* SPI1
-    * NSS - PA15
-    * SCK - PB3
-    * MISO - PB4
-    * MOSI - PB5
+e.g. on Windows
+```sh
+set(TOOLCHAIN_DIR C:/opt/gcc-arm-none-eabi-4_9-2015q3-20150921-win32)
+```
 
-* USART1
-    * TX - PA9
-    * RX - PA10
+or on Linux
+```sh
+set(TOOLCHAIN_DIR /opt/gcc-arm-none-eabi-4_9-2015q3)
+```
 
-* USART2
-    * TX - PA2
-    * RX - PA3
+Then on Windows run ```build.cmd``` or on Linux run ```./build.bash```
+and the .bin and .hex files should be created in the ```build-stm32/src```
+folder. Also, a .cproject and .project files are created if you want to
+edit the source code.
 
-* USB - Dual CDC device
+To flash the HEX file in windows use st-link utility like this:
+```"C:\Program Files (x86)\STMicroelectronics\STM32 ST-LINK Utility\ST-LINK Utility\ST-LINK_CLI.exe" -c SWD -p build-stm32\src\stm32f103_wifi_usb_psu.hex -Rst```
 
-## TODO:
-#### peripherals:
-These are the peripherals that are not implemented yet
-
-* I2C1 w/ DMA
-    * SDA - PB7
-    * SCL - PB6
-
-#### GUI
-A gui application that exports these peripherals to the OS
+To flash the bin in Linux:
+```st-flash --reset write build-stm32/src/stm32f103_wifi_usb_psu.bin 0x8000000```
 
 ## FW details
 * `CMSIS version`: 5.3.0
